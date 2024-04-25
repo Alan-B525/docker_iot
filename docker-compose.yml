@@ -1,10 +1,16 @@
 version: "3"
 services:
   clientemqtt:
+    build:
+      context: ./clienteMqtt
+      dockerfile: Dockerfile
     image: clientemqtt
     container_name: clientemqtt
     environment:
-      - TZ=America/Argentina/Buenos_Aires 
-      - SERVIDOR=${SERVIDOR} #Se reemplazará por la env var SERVIDOR defineda en .env
-      - TOPICO=${TOPICO}
+      - TZ=America/Argentina/Buenos_Aires
+      - SERVIDOR=${SERVIDOR} # Se reemplazará por la env var SERVIDOR definida en .env
+      - TOPICO_SUBS_1=${TOPICO_SUBS_1} # Se reemplazará por la env var TOPICO_SUBS_1 definida en .env
+      - TOPICO_SUBS_2=${TOPICO_SUBS_2} # Se reemplazará por la env var TOPICO_SUBS_2 definida en .env
+      - TOPICO_PUB=${TOPICO_PUB} # Se reemplazará por la env var TOPICO_PUB definida en .env
     restart: unless-stopped
+
