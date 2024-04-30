@@ -4,21 +4,26 @@ import os
 import ssl
 import aiomqtt
 
-async def manejar_mensaje_topico_1(topico, payload):
-    logging.info(f'Corrutina manejar_mensaje_topico_1 - Tópico: {topico}, Mensaje: {payload.decode()}')
+async def mensaje_topico_1(topico, payload):
+    logging.info(f'Corrutina mensaje_topico_1 - Tópico: {topico}, Mensaje: {payload.decode()}')
 
-async def manejar_mensaje_topico_2(topico, payload):
-    logging.info(f'Corrutina manejar_mensaje_topico_2 - Tópico: {topico}, Mensaje: {payload.decode()}')
+async def mensaje_topico_2(topico, payload):
+    logging.info(f'Corrutina mensaje_topico_2 - Tópico: {topico}, Mensaje: {payload.decode()}')
 
-async def suscribirse_a_todos_los_mensajes(cliente, topicos):
+async def manejar_mensajes(cliente, topico_subs_1, topico_subs_2):
+    try:
+        async for mensaje in cliente.messages:
+            if mensaje.topic == topico_subs_1:
+                await mensaje_topico_1(mensaje.topic, mensaje.payload)
+            elif mensaje.topic == topico_subs_2:
+                await mensaje_topico_2(mensaje.topic, mensaje.payload)
+    except aiomqtt.MQTTError as e:
+        logging.error(f'Error de MQTT: {e}')
+
+async def suscribirse_a_topicos(cliente, topicos):
     try:
         await asyncio.gather(*[cliente.subscribe(topico) for topico in topicos])
         logging.info(f'Suscrito a los tópicos: {", ".join(topicos)}')
-        async for mensaje in cliente.messages:
-            if mensaje.topic == topicos[0]:
-                await manejar_mensaje_topico_1(mensaje.topic, mensaje.payload)
-            elif mensaje.topic == topicos[1]:
-                await manejar_mensaje_topico_2(mensaje.topic, mensaje.payload)
     except aiomqtt.MQTTError as e:
         logging.error(f'Error de MQTT: {e}')
 
@@ -29,6 +34,7 @@ async def publicar(cliente, topico):
             await asyncio.sleep(3)  # Incremento cada 3 segundos
             contador += 1
             await cliente.publish(topico, f'Contador: {contador}')
+            logging.info("Publicando...")
             await asyncio.sleep(2)  # Publicar cada 5 segundos
     except aiomqtt.MQTTError as e:
         logging.error(f'Error de MQTT al publicar en el tópico {topico}: {e}')
@@ -51,8 +57,9 @@ async def main():
     ) as cliente:
         try:
             async with asyncio.TaskGroup() as tg:
-                tg.create_task(suscribirse_a_todos_los_mensajes(cliente, [topico_subs_1, topico_subs_2]))
+                tg.create_task(suscribirse_a_topicos(cliente, [topico_subs_1, topico_subs_2]))
                 tg.create_task(publicar(cliente, topico_pub))
+                tg.create_task(manejar_mensajes(cliente, topico_subs_1, topico_subs_2))
         except KeyboardInterrupt:
             logging.info("Detenido por el usuario.")
         except Exception as e:
