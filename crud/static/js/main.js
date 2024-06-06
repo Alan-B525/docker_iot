@@ -10,3 +10,19 @@ if(btnDelete) {
     });
   })
 }
+document.addEventListener("DOMContentLoaded", function () {
+  const theme = localStorage.getItem("theme") || "light";
+  setTheme(theme);
+});
+
+function setTheme(theme) {
+  let themeStylesheet = document.getElementById("themeStylesheet");
+
+  if (theme === "dark") {
+    themeStylesheet.href = "https://bootswatch.com/5/darkly/bootstrap.min.css";
+  } else {
+    themeStylesheet.href = "https://bootswatch.com/5/cosmo/bootstrap.min.css";
+  }
+
+  localStorage.setItem("theme", theme);
+}
