@@ -12,6 +12,7 @@ services:
     ports:
       - 3306:3306
     restart: unless-stopped
+
   phpmyadmin:
     image: phpmyadmin
     container_name: phpmyadmin
@@ -23,12 +24,13 @@ services:
       - 8080:80
     depends_on:
       - mariadb
+
   clientemqtt:
     image: clientemqtt
     container_name: clientemqtt
     environment:
       - TZ=America/Argentina/Buenos_Aires 
-      - SERVIDOR=${SERVIDOR} #Se reemplazará por la env var SERVIDOR defineda en .env
+      - SERVIDOR=${SERVIDOR} # Se reemplazará por la env var SERVIDOR definida en .env
       - TOPICO=${TOPICO}
       - MARIADB_SERVER=${MARIADB_SERVER}
       - MARIADB_USER=${MARIADB_USER}
@@ -40,6 +42,7 @@ services:
     restart: unless-stopped
     depends_on:
       - mariadb
+
   mosquitto:
     image: eclipse-mosquitto
     container_name: mosquitto
@@ -54,6 +57,7 @@ services:
       - ./swag/etc/letsencrypt:/var/tmp
       - ./mosquitto/data:/mosquitto/data
       - ./mosquitto/log:/mosquitto/log
+
   grafana:
     image: grafana/grafana-oss
     container_name: grafana
@@ -71,6 +75,7 @@ services:
       GF_SERVER_DOMAIN: ${DOMINIO}
       GF_ANALYTICS_REPORTING_ENABLED: "false"
     restart: unless-stopped
+
   portainer:
     image: portainer/portainer-ce:2.20.2
     container_name: portainer
@@ -80,6 +85,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer_data:/data
     restart: unless-stopped
+
   swag:
     image: lscr.io/linuxserver/swag:latest
     container_name: swag
@@ -99,6 +105,7 @@ services:
       - ${PUERTO}:443/tcp
       - 80:80
     restart: unless-stopped
+
   telegrambot:
     image: telegrambot
     container_name: telegrambot
@@ -112,6 +119,7 @@ services:
     restart: unless-stopped
     depends_on:
       - mariadb
+
   crud:
     image: crud
     build:
@@ -128,5 +136,23 @@ services:
     restart: unless-stopped
     depends_on:
       - mariadb
+
+  control.esp32:
+    image: control-esp32
+    build:
+      context: ./control-esp32
+    container_name: control-esp32
+    environment:
+      - FLASK_SECRET_KEY2=${FLASK_SECRET_KEY2}
+      - SERVIDOR=${SERVIDOR}
+      - MQTT_USR=${MQTT_USR}
+      - MQTT_PASS=${MQTT_PASS}
+      - PUERTO_MQTTS=${PUERTO_MQTTS}
+    ports:
+      - "8001:8001"  # Puerto 8001 expuesto para control.esp32
+    restart: unless-stopped
+    depends_on:
+      - mosquitto
+
 volumes:
   portainer_data:

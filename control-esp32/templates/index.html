@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Control de Nodos ESP32</title>
+  <link rel="stylesheet" href="https://bootswatch.com/5/cosmo/bootstrap.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Control de Nodos ESP32</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="#">Inicio</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Configuración</a>
+          </li>
+        </ul>
+        <div class="dropdown ms-3">
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="themeDropdown" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            Tema
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="themeDropdown">
+            <li><a class="dropdown-item" href="#" data-theme="light">Claro</a></li>
+            <li><a class="dropdown-item" href="#" data-theme="dark">Oscuro</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-5">
+    <h1>Control de Nodos ESP32</h1>
+    <form method="POST" action="{{ url_for('send_command') }}">
+      <div class="form-group">
+        <label for="node">Nodo</label>
+        <select class="form-control" id="node" name="node">
+          {% for node in nodes %}
+          <option value="{{ node }}">{{ node }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Comando</label>
+        <div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" id="setpoint" name="command" value="setpoint">
+            <label class="form-check-label" for="setpoint">Setpoint</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" id="destello" name="command" value="destello">
+            <label class="form-check-label" for="destello">Destello</label>
+          </div>
+        </div>
+      </div>
+      <div class="form-group" id="setpoint_value" style="display: none;">
+        <label for="value">Valor</label>
+        <input type="number" class="form-control" id="value" name="value">
+      </div>
+      <button type="submit" class="btn btn-primary">Enviar Comando</button>
+    </form>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+
+</html>
