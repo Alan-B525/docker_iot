@@ -1,0 +1,93 @@
+[
+    {
+        "id": "f960756b24a0edc0",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "7f9146795c29f8ba",
+        "type": "mqtt-broker",
+        "name": "BROKER-DUCK",
+        "broker": "alanb525.duckdns.org",
+        "port": "10865",
+        "tls": "83562cced308d1e8",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": true,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "83562cced308d1e8",
+        "type": "tls-config",
+        "name": "",
+        "cert": "",
+        "key": "",
+        "ca": "",
+        "certname": "",
+        "keyname": "",
+        "caname": "",
+        "servername": "",
+        "verifyservercert": false,
+        "alpnprotocol": ""
+    },
+    {
+        "id": "7190adbee82bb422",
+        "type": "mqtt in",
+        "z": "f960756b24a0edc0",
+        "name": "",
+        "topic": "comando/",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "7f9146795c29f8ba",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 440,
+        "y": 200,
+        "wires": [
+            [
+                "82676eb62665e636"
+            ]
+        ]
+    },
+    {
+        "id": "82676eb62665e636",
+        "type": "debug",
+        "z": "f960756b24a0edc0",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 180,
+        "wires": []
+    }
+]
